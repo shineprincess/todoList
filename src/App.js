@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import TodoList from './TodoList.jsx'
 
-function App() {
+const App = () => {
+  
+  const [item , setItem] = useState("")
+
+  const [input , setInput] = useState([])
+
+  const itemsList = (event) => {
+    setItem(event.target.value)
+  }
+
+  const inputEvent = () => {
+      setInput( (oldItems) => {
+        return [...oldItems , item];  //olditem , new item
+      }); 
+      setItem('')
+  };
+
+  const deleteItems = (id) => {
+    console.log('Clicked ')
+    setInput ((oldItems) => {
+      return oldItems.filter((arrElem, index) => {
+          return index !== id ;
+      })
+    });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <div className="main__div">
+        <div className="child__div">
+          <h1>To do list app</h1>
+            <input className = "input__style" type = "text" placeholder="Add an items" 
+            value ={item} onChange = {itemsList} />
+            <button onClick={inputEvent} className="add__btn"> { <i class="fas fa-plus-circle"></i> }</button>
+
+            <ol>
+              {
+                input.map((itemVal, index) => {
+                   return <TodoList 
+                          key={index} 
+                          id = {index} 
+                          text={itemVal}
+                          onSelect ={deleteItems} />;
+                })
+              }
+            </ol>
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default App;
